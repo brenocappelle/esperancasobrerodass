@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::select('id', 'name', 'email')
+        $user = User::select('id', 'name', 'email', 'deleted_at')
             ->withTrashed()
             ->paginate('10');
 
@@ -37,23 +37,20 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(UserCreateRequest $request)
-    {
-        dd($someVariable);
+    {       
+       $data = $request->all();
 
-        
-       // $data = $request->all();
+       $user = User::create([
+           'name' => $data['name'],
+           'email' => $data['email'],
+           'password' => bcrypt($data['password']),
+       ]);
 
-       // $user = User::create([
-         //   'name' => $data['name'],
-        //    'email' => $data['email'],
-        //    'password' => bcrypt($data['password']),
-      //  ]);
-
-       // return [
-       //     'status' => 200,
-       //     'menssagem' => 'Usuário cadastrado com sucesso!!',
-       //     'user' => $user
-       //  ];
+       return [
+           'status' => 200,
+           'menssagem' => 'Usuário cadastrado com sucesso!!',
+           'user' => $user
+        ];
         
     }
 
